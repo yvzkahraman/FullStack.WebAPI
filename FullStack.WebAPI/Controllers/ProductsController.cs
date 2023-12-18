@@ -1,10 +1,12 @@
 ﻿using FullStack.WebAPI.Data;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
 namespace FullStack.WebAPI.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
@@ -40,7 +42,7 @@ namespace FullStack.WebAPI.Controllers
             // npm => node package manager
             // Node.js  || 
 
-            throw new Exception("Bir hata oluştu");
+            // throw new Exception("Bir hata oluştu");
 
             return Ok(ProductService.products);
 
@@ -82,14 +84,14 @@ namespace FullStack.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string product)
+        public IActionResult Create(CreateProductModel model)
         {
-            if (product == null)
+            if (model.Name == null)
             {
                 return BadRequest();
             }
 
-            var createdProduct = ProductService.Create(product);
+            var createdProduct = ProductService.Create(model.Name);
             return Created(string.Empty, createdProduct);
         }
 
@@ -118,6 +120,11 @@ namespace FullStack.WebAPI.Controllers
             return File(Encoding.UTF8.GetBytes(data), "application/text");
         }
 
+    }
+
+    public class CreateProductModel
+    {
+        public string Name { get; set; } = null!;
     }
 
     //public class TestController : Controller
